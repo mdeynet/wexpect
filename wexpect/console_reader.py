@@ -174,13 +174,15 @@ class ConsoleReaderBase:
 
     def suspend_child(self):
         """Pauses the main thread of the child process."""
-        handle = windll.kernel32.OpenThread(win32con.THREAD_SUSPEND_RESUME, 0, self.child_tid)
-        win32process.SuspendThread(handle)
+        pid = self.child_process.pid
+        p = psutil.Process(pid)
+        p.suspend()
 
     def resume_child(self):
         """Un-pauses the main thread of the child process."""
-        handle = windll.kernel32.OpenThread(win32con.THREAD_SUSPEND_RESUME, 0, self.child_tid)
-        win32process.ResumeThread(handle)
+        pid = self.child_process.pid
+        p = psutil.Process(pid)
+        p.resume()
 
     def refresh_console(self):
         """Clears the console after pausing the child and
